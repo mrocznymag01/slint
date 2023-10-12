@@ -109,5 +109,8 @@ wasm-bindgen-futures = "0.4.30"
 [dev-dependencies]
 spin_on = "0.1"
 
+[build-dependencies]
+slint-build = { path = "../../api/rs/build" }
+
 # [package.metadata.wasm-pack.profile.release]
 # wasm-opt = false

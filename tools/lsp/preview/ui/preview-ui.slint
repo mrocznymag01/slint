@@ -1,0 +1,23 @@
+// Copyright © SixtyFPS GmbH <info@slint.dev>
+// SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
+
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component PreviewUi inherits Window {
+    callback design-mode-changed(bool);
+
+    in property<component-factory> preview-area <=> preview-area-container.component-factory;
+
+    VerticalBox {
+        design-mode-toggle := Button {
+            text: "Design Mode";
+            checkable: true;
+
+            clicked => {
+                root.design-mode-changed(self.checked);
+            }
+        }
+
+        preview-area-container := ComponentContainer {}
+    }
+}
