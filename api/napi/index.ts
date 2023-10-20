@@ -2,7 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
 
 import * as napi from "./rust-module";
-export { Diagnostic, DiagnosticLevel, Window, Brush, Color, ImageData, Point, Size } from "./rust-module";
+export { Diagnostic, DiagnosticLevel, Window, Brush, Color, ImageData } from "./rust-module";
+
+/**
+ *  Represents a two-dimensional point.
+ */
+export interface Point {
+    x: number,
+    y: number
+}
+
+/**
+ *  Represents a two-dimensional size.
+ */
+export interface Size {
+    width: number,
+    height: number
+}
 
 /**
  * Model<T> is the interface for feeding dynamic data into
