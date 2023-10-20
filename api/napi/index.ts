@@ -2,41 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
 
 import * as napi from "./rust-module";
-export { Diagnostic, DiagnosticLevel, Window, Brush, Color, ImageData, Point, Size, SlintModelNotify } from "./rust-module";
-
-/**
- * ModelPeer is the interface that the run-time implements. An instance is
- * set on dynamic {@link Model} instances and can be used to notify the run-time
- * of changes in the structure or data of the model.
- */
-export interface ModelPeer {
-    /**
-     * Call this function from our own model to notify that fields of data
-     * in the specified row have changed.
-     * @argument row
-     */
-    rowDataChanged(row: number): void;
-    /**
-     * Call this function from your own model to notify that one or multiple
-     * rows were added to the model, starting at the specified row.
-     * @param row
-     * @param count
-     */
-    rowAdded(row: number, count: number): void;
-    /**
-     * Call this function from your own model to notify that one or multiple
-     * rows were removed from the model, starting at the specified row.
-     * @param row
-     * @param count
-     */
-    rowRemoved(row: number, count: number): void;
-
-    /**
-     * Call this function from your own model to notify that the model has been
-     * changed and everything must be reloaded
-     */
-    reset(): void;
-}
+export { Diagnostic, DiagnosticLevel, Window, Brush, Color, ImageData, Point, Size } from "./rust-module";
 
 /**
  * Model<T> is the interface for feeding dynamic data into
@@ -51,11 +17,10 @@ export interface ModelPeer {
  * ```js
  * export class ArrayModel<T> implements Model<T> {
  *    private a: Array<T>
- *    notify: ModelPeer;
  *
  *   constructor(arr: Array<T>) {
+ *        super();
  *        this.a = arr;
- *        this.notify = new NullPeer();
  *    }
  *
  *    rowCount() {
@@ -96,34 +61,38 @@ export interface ModelPeer {
  *}
  * ```
  */
-export interface Model<T> {
+export abstract class Model<T> {
+    /**
+     * @hidden
+     */
+    notify: NullPeer;
+
+    constructor() {
+        this.notify = new NullPeer();
+    }
+
     /**
      * Implementations of this function must return the current number of rows.
      */
-    rowCount(): number;
+    abstract rowCount(): number;
     /**
      * Implementations of this function must return the data at the specified row.
      * @param row
      */
-    rowData(row: number): T | undefined;
+    abstract rowData(row: number): T | undefined;
     /**
      * Implementations of this function must store the provided data parameter
      * in the model at the specified row.
      * @param row
      * @param data
      */
-    setRowData(row: number, data: T): void;
-    /**
-     * This public member is set by the run-time and implementation must use this
-     * to notify the run-time of changes in the model.
-     */
-    notify: ModelPeer;
+    abstract setRowData(row: number, data: T): void;
 }
 
 /**
  * @hidden
  */
-class NullPeer implements ModelPeer {
+class NullPeer {
     rowDataChanged(row: number): void { }
     rowAdded(row: number, count: number): void { }
     rowRemoved(row: number, count: number): void { }
@@ -134,12 +103,11 @@ class NullPeer implements ModelPeer {
  * ArrayModel wraps a JavaScript array for use in `.slint` views. The underlying
  * array can be modified with the [[ArrayModel.push]] and [[ArrayModel.remove]] methods.
  */
-export class ArrayModel<T> implements Model<T> {
+export class ArrayModel<T> extends Model<T> {
     /**
      * @hidden
      */
     private a: Array<T>
-    notify: ModelPeer;
 
     /**
      * Creates a new ArrayModel.
@@ -147,8 +115,8 @@ export class ArrayModel<T> implements Model<T> {
      * @param arr
      */
     constructor(arr: Array<T>) {
+        super();
         this.a = arr;
-        this.notify = new NullPeer();
     }
 
     rowCount() {
@@ -174,9 +142,7 @@ export class ArrayModel<T> implements Model<T> {
     // FIXME: should this be named splice and have the splice api?
     /**
      * Removes the specified number of element from the array that's backing
-     * the model, starting at the specified index. This is equivalent to calling
-     * Array.slice() on the array and notifying the run-time about the removed
-     * rows.
+     * the model, starting at the specified index.
      * @param index
      * @param size
      */
