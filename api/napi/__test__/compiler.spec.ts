@@ -209,8 +209,8 @@ test('compiler diagnostics', (t) => {
     level: 0,
     message: 'Parse error',
     lineNumber: 2,
-    column: 12,
-    sourceFile: 'testsource.slint'
+    columnNumber: 12,
+    fileName: 'testsource.slint'
   });
 })
 
