@@ -389,9 +389,10 @@ export function loadFile(path: string) : Object {
             instance!.definition().callbacks.forEach((cb) => {
                 Object.defineProperty(componentHandle, cb.replace(/-/g, '_') , {
                     get() {
-                        let callback = function () { return instance!.invoke(cb, Array.from(arguments)); } as Callback;
-                        callback.setHandler = function (callback) { instance!.setCallback(cb, callback) };
-                        return callback;
+                        return function () { return instance!.invoke(cb, Array.from(arguments)); } as Callback;
+                    },
+                    set(callback) {
+                        instance!.setCallback(cb, callback);
                     },
                     enumerable: true,
                 })
