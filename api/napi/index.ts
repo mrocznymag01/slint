@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
 
 import * as napi from "./rust-module";
-export { Diagnostic, DiagnosticLevel, Window, Brush, Color, ImageData } from "./rust-module";
+export { Diagnostic, DiagnosticLevel, Brush, Color, ImageData } from "./rust-module";
 
 /**
  *  Represents a two-dimensional point.
@@ -18,6 +18,52 @@ export interface Point {
 export interface Size {
     width: number,
     height: number
+}
+
+/**
+ * This type represents a window towards the windowing system, that's used to render the
+ * scene of a component. It provides API to control windowing system specific aspects such
+ * as the position on the screen.
+ */
+export interface Window {
+    /**
+     * Shows the window on the screen. An additional strong reference on the
+     * associated component is maintained while the window is visible.
+     */
+    show(): void;
+
+    /** Hides the window, so that it is not visible anymore. */
+    hide(): void;
+
+    /**
+     * Returns the visibility state of the window. This function can return false even if you previously called show()
+     * on it, for example if the user minimized the window.
+     */
+    get isVisible(): boolean;
+
+    /** Returns the logical position of the window on the screen. */
+    get logicalPosition(): Point;
+
+    /** Sets the logical position of the window on the screen. */
+    set logicalPosition(position: Point);
+
+    /** Returns the physical position of the window on the screen. */
+    get physicalPosition(): Point;
+
+    /** Sets the physical position of the window on the screen. */
+    set physicalPosition(position: Point);
+
+    /** Returns the logical size of the window on the screen, */
+    get logicalSize(): Size;
+
+    /** Sets the logical size of the window on the screen, */
+    set logicalSize(size: Size);
+
+    /** Returns the physical size of the window on the screen, */
+    get physicalSize(): Size;
+
+    /** Sets the logical size of the window on the screen, */
+    set physicalSize(size: Size);
 }
 
 /**
@@ -347,6 +393,7 @@ export namespace private_api {
     export import ComponentDefinition = napi.ComponentDefinition;
     export import ComponentInstance = napi.ComponentInstance;
     export import ValueType = napi.ValueType;
+    export import Window = napi.Window;
 
     export function send_mouse_click(component: Component, x: number, y: number) {
         component.component_instance.sendMouseClick(x, y);
