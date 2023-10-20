@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
 
 import * as napi from "./rust-module";
-export { Diagnostic, DiagnosticLevel, Brush, Color, ImageData } from "./rust-module";
+export { Diagnostic, DiagnosticLevel, Brush, Color } from "./rust-module";
 
 /**
  *  Represents a two-dimensional point.
@@ -64,6 +64,26 @@ export interface Window {
 
     /** Sets the logical size of the window on the screen, */
     set physicalSize(size: Size);
+}
+
+/**
+ * An image data type that can be displayed by the Image element
+ */
+export interface ImageData {
+    /**
+     *  Returns the image as buffer.
+     */
+    get data(): Uint8Array;
+
+    /**
+     * Returns the width of the image in pixels.
+     */
+    get width(): number;
+
+    /**
+     *  Returns the height of the image in pixels.
+     */
+    get height(): number;
 }
 
 /**
@@ -394,6 +414,7 @@ export namespace private_api {
     export import ComponentInstance = napi.ComponentInstance;
     export import ValueType = napi.ValueType;
     export import Window = napi.Window;
+    export import ImageData = napi.ImageData;
 
     export function send_mouse_click(component: Component, x: number, y: number) {
         component.component_instance.sendMouseClick(x, y);
