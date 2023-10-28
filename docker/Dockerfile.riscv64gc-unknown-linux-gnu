@@ -1,7 +1,7 @@
 # Copyright © SixtyFPS GmbH <info@slint.dev>
 # SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-Slint-Royalty-free-1.1 OR LicenseRef-Slint-commercial
 
-FROM cross-rs/riscv64gc-unknown-linux-gnu:0.2.5
+FROM ghcr.io/cross-rs/riscv64gc-unknown-linux-gnu:0.2.5
 
 
 RUN dpkg --add-architecture riscv64 && \
