@@ -63,15 +63,11 @@ jobs:
     - uses: ./.github/actions/setup-rust
       with:
         target: ${{ matrix.target }}
-    - name: Enable Skia build
-      if: matrix.target != 'riscv64gc-unknown-linux-gnu'
-      run: |
-          echo "EXTRA_ARGS=--features slint/renderer-skia" >> $GITHUB_ENV
     - uses: baptiste0928/cargo-install@v2
       with:
         crate: cross
     - name: Build
-      run: cross build --release --target=${{ matrix.target }} --workspace --exclude slint-node --exclude slint-napi --exclude ffmpeg --exclude mcu-board-support --exclude printerdemo_mcu --exclude i-slint-backend-linuxkms --exclude uefi-demo ${{ env.EXTRA_ARGS }}
+      run: cross build --release --target=${{ matrix.target }} --workspace --exclude slint-node --exclude slint-napi --exclude ffmpeg --exclude mcu-board-support --exclude printerdemo_mcu --exclude i-slint-backend-linuxkms --exclude uefi-demo --features slint/renderer-skia
     - name: "Upload printerdemo artifact"
       uses: actions/upload-artifact@v3
       with:
