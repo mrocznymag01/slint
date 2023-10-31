@@ -116,7 +116,7 @@ pub fn publish() -> Result<(), Box<dyn std::error::Error>> {
 
     {
         let _p = sh.push_dir(root);
-        cmd!(sh, "npm publish {file_name}").run()?;
+        cmd!(sh, "npm publish --tag beta {file_name}").run()?;
     }
 
     Ok(())
