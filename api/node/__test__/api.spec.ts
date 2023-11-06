@@ -80,10 +80,11 @@ test('callback closure cyclic references do not prevent GC', async (t) => {
     let demo_module = loadFile(path.join(__dirname, "resources/test-gc.slint")) as any;
     let demo = new demo_module.Test();
     t.is(demo.check, "initial value");
+    t.true(Object.hasOwn(demo, "say_hello"));
     let callback_invoked = false;
     let demo_weak = new WeakRef(demo);
 
-    demo.my_callback = () => {
+    demo.say_hello = () => {
         demo = null;
         callback_invoked = true;
     };
@@ -98,7 +99,7 @@ test('callback closure cyclic references do not prevent GC', async (t) => {
     t.true(demo_weak.deref() !== undefined);
 
     // Invoke the callback, to clear "demo"
-    demo.my_callback();
+    demo.say_hello();
     t.true(callback_invoked);
     t.true(demo === null);
 
