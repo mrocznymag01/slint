@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 }" HAVE_OPENGLES2)
 
 set(CMAKE_REQUIRED_INCLUDES "${saved_includes}")
-set(CMAKE_REQUIRED_LIBRARIES "${saved_libraries}")
+set(CMAKE_REQUIRED_REPOSITORIES << INCLUDE (OpenGLES2::OpenGLES2 UNKNOWN IMPORTED)  "${saved_libraries}")
 
 # Standard CMake package dance
 set(package_args OPENGLES2_INCLUDE_DIR OPENGLES2_LIBRARY HAVE_OPENGLES2)
